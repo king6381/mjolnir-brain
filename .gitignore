@@ -1,5 +1,20 @@
+# Dependencies
 node_modules/
-.env
-*.log
+__pycache__/
+
+# Archives and backups
 memory/archive/
-/tmp/
+*.tar.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs (keep structure, ignore content)
+*.log
+
+# Credentials (NEVER commit)
+*.key
+*.pem
+cred_manager.py
+secrets/

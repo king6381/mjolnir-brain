@@ -1,10 +1,10 @@
 {
   "name": "mjolnir-brain",
   "version": "1.0.0",
-  "description": "AI Agent self-evolving memory system — persistent memory, self-learning, and auto-correction",
-  "author": "Sigma & Team",
+  "description": "AI Agent Self-Evolving Memory System — persistent memory, self-learning, and auto-correction for AI agents",
+  "keywords": ["ai-agent", "memory", "self-learning", "openclaw", "strategy-registry", "write-through"],
+  "author": "",
   "license": "MIT",
-  "keywords": ["memory", "ai-agent", "self-learning", "openclaw", "automation"],
   "repository": {
     "type": "git",
     "url": ""

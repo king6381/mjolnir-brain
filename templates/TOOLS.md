@@ -1,19 +1,39 @@
-# TOOLS.md — Local Notes
+# TOOLS.md - Local Notes
+
+Record environment-specific information here: SSH connections, API keys (references only!), paths, service endpoints, voice preferences, etc.
 
 ## Infrastructure
-- (document your servers, IPs, SSH configs here)
 
-## Credentials
-- (use encrypted storage, never plaintext)
+*(Fill in your servers, services, connections)*
+
+| Node | IP | Role | Access |
+|------|-----|------|--------|
+| | | | |
+
+## SSH Connections
+
+| From → To | Command | Auth |
+|-----------|---------|------|
+| | | |
+
+## API Keys & Services
+
+> ⚠️ **Never store plaintext credentials here.** Use a credential manager or environment variables.
+
+| Service | Key Location | Notes |
+|---------|-------------|-------|
+| | | |
 
 ## Local Paths
-- **Workspace**: (your workspace path)
-- **Config**: (your config path)
-- **Logs**: (your logs path)
+
+- **Workspace**: `~/.openclaw/workspace`
+- **Config**: `~/.openclaw/openclaw.json`
+- **Logs**: `~/.openclaw/logs/`
 
 ## Voice Preferences
-- **TTS Default**: (your preferred voice)
+
+- **TTS Default**: (e.g., en-US-JennyNeural for English)
 
 ---
 
-*Update as you discover tools and configurations.*
+*Last updated: (date)*
