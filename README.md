@@ -6,15 +6,29 @@
 
 ---
 
+## 🔒 安全模型
+
+> **核心功能 100% 本地运行**，无网络依赖、无凭证要求、无外部调用。
+
+| 层面 | 策略 |
+|------|------|
+| 数据隔离 | `MEMORY.md` 仅在私人主会话加载，群聊/共享场景自动跳过 |
+| 文件范围 | 仅读写 workspace 目录内的文件 |
+| 网络操作 | 核心功能零网络依赖；备份脚本需手动 opt-in + 配置凭证 |
+| Cron 任务 | 全部 opt-in，默认不启用，需审查脚本后手动配置 |
+| 策略执行 | 涉及 ssh/sudo 的策略标记 `requires_consent`，需用户明确批准 |
+
+详见 [docs/security.md](docs/security.md)。
+
 ## ✨ 特性
 
 - 🧠 **分层记忆架构** — 会话日志 → 长期记忆 → 规则文件，三层沉淀
 - 🔄 **自我进化协议** — 犯过的错自动记录，不犯第二次
 - 📝 **Write-Through** — 学到即写入，不丢失任何洞察
 - 🎯 **策略注册表** — 问题→解法映射，带成功率追踪，越用越准
-- 💓 **心跳系统** — 定期自检、知识提炼、空闲任务队列
-- 🤖 **AI 真摘要** — 自动提炼日志精华，不是原文复制
-- 📦 **双目标备份 (可选, 需手动配置)** — 支持 WebDAV + SSH 双通道容灾
+- 💓 **心跳系统 (opt-in)** — 定期自检、知识提炼、空闲任务队列
+- 🤖 **AI 真摘要 (opt-in)** — 自动提炼日志精华，不是原文复制
+- 📦 **双目标备份 (opt-in, 需手动配置)** — 支持 WebDAV + SSH 双通道容灾
 - 🔍 **模糊搜索** — 多源记忆检索，支持归档搜索
 
 ## 📁 项目结构
@@ -65,23 +79,22 @@ clawdhub install mjolnir-brain
 
 ```bash
 # 克隆仓库
-git clone https://github.com/YOUR_USER/mjolnir-brain.git
+git clone https://github.com/king6381/mjolnir-brain.git
 
-# 复制模板到你的 OpenClaw workspace
+# 1. 复制核心模板到你的 workspace（这是记忆系统的全部必需品）
 cp -r mjolnir-brain/templates/* ~/.openclaw/workspace/
-cp -r mjolnir-brain/scripts ~/.openclaw/workspace/
 cp mjolnir-brain/strategies.json ~/.openclaw/workspace/
+mkdir -p ~/.openclaw/workspace/memory
 
-# 设置脚本权限
+# 2. (可选) 复制自动化脚本 — ⚠️ 请先审查脚本内容再启用
+cp -r mjolnir-brain/scripts ~/.openclaw/workspace/
 chmod +x ~/.openclaw/workspace/scripts/*.sh
 
-# 配置 cron (可选)
-# ⚠️ 以下 cron 任务均为可选，请审查脚本内容后再启用
-crontab -e
-# 添加:
+# 3. (可选) 配置 cron — ⚠️ 全部为 opt-in，不配置不影响核心功能
+# crontab -e
 # 0 * * * * ~/.openclaw/workspace/scripts/auto_commit.sh
 # 0 4 * * * ~/.openclaw/workspace/scripts/memory_consolidate.sh
-# 0 4 * * * ~/.openclaw/workspace/scripts/workspace_backup.sh
+# 0 4 * * * ~/.openclaw/workspace/scripts/workspace_backup.sh  # 需先配置备份目标
 ```
 
 ### 首次使用

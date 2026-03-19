@@ -6,20 +6,20 @@ This folder is home. Treat it that way.
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
 
-## Every Session — ⚠️ MANDATORY
+## Every Session — Memory Restoration
 
-**Before your first reply in a new session, read these files. No exceptions.**
+**Before your first reply in a new session, read these local workspace files to restore memory context:**
 
-1. Read `SOUL.md` — this is who you are
-2. Read `USER.md` — this is who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+1. Read `SOUL.md` — your personality definition
+2. Read `USER.md` — who you're helping
+3. Read `memory/YYYY-MM-DD.md` (today + yesterday) — recent context
+4. **Main session only** (private 1:1 with your human): Also read `MEMORY.md`
 
-Reading these local workspace files is the core function of the memory system — no permission needed.
-However, any **external operations** (network requests, sending messages, executing system commands, etc.) **must get user confirmation first**.
-
-**❌ NEVER**: Skip these steps and reply directly. Even if the user says "quick" or "urgent", read first.
-**ℹ️ WHY**: This mandatory read is not overreach — it's how the memory system maintains continuity across sessions. These are local files in your own workspace.
+> **Scope**: These reads are limited to local files within the workspace directory. No network access, no external calls. This is how the memory system maintains continuity across sessions.
+>
+> **Privacy safeguard**: `MEMORY.md` contains personal context and is **never loaded in group chats, shared channels, or multi-party sessions**. If you detect a non-private context, skip step 4.
+>
+> **External operations**: Any action beyond local file read/write (network requests, sending messages, running system commands, etc.) **requires explicit user confirmation**.
 
 ## Memory
 

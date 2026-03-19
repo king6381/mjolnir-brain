@@ -2,10 +2,20 @@
 
 ## Prerequisites
 
+### Required (core memory system)
 - [OpenClaw](https://github.com/openclaw/openclaw) installed and running
-- Bash 4+ (Linux/macOS)
-- Python 3.8+ (for strategy scripts)
-- Git (for auto-commit)
+- That's it! The core memory system is pure Markdown + JSON — no binaries needed.
+
+### Optional (automation scripts)
+Only needed if you want to use the scripts in `scripts/`:
+- **bash 4+** — all scripts
+- **git** — `auto_commit.sh`
+- **grep** (with `-P` support) — `memory_search.sh`
+- **tar, gzip** — `memory_consolidate.sh` (archiving old logs)
+- **curl** — `workspace_backup.sh` (only if WebDAV backup enabled)
+- **ssh, scp** — `workspace_backup.sh` (only if SSH backup enabled)
+
+> ⚠️ You can use the full memory system (templates, strategies, Write-Through, heartbeats) without installing any scripts or cron jobs.
 
 ## Method 1: OpenClaw Skill (Recommended)
 
@@ -28,12 +38,12 @@ git clone https://github.com/YOUR_USER/mjolnir-brain.git
 cd mjolnir-brain
 ```
 
-### Step 2: Copy Templates
+### Step 2: Copy Core Templates (required)
 
 ```bash
 WORKSPACE="${HOME}/.openclaw/workspace"
 
-# Copy template files
+# Copy template files — this is the core memory system
 cp templates/AGENTS.md "$WORKSPACE/"
 cp templates/SOUL.md "$WORKSPACE/"
 cp templates/BOOTSTRAP.md "$WORKSPACE/"
@@ -41,10 +51,6 @@ cp templates/IDENTITY.md "$WORKSPACE/"
 cp templates/USER.md "$WORKSPACE/"
 cp templates/MEMORY.md "$WORKSPACE/"
 cp templates/HEARTBEAT.md "$WORKSPACE/"
-
-# Copy scripts
-cp -r scripts "$WORKSPACE/"
-chmod +x "$WORKSPACE/scripts/"*.sh
 
 # Copy strategy registry
 cp strategies.json "$WORKSPACE/"
@@ -58,7 +64,17 @@ cp playbooks/README.md "$WORKSPACE/playbooks/"
 cp playbooks/frequency.json "$WORKSPACE/playbooks/"
 ```
 
-### Step 3: Initialize Git
+### Step 3: Copy Scripts (optional — review before using!)
+
+> ⚠️ **Audit the scripts before copying.** They will be able to read/write files in your workspace. See [docs/security.md](docs/security.md) for details.
+
+```bash
+# Only copy if you want automation features
+cp -r scripts "$WORKSPACE/"
+chmod +x "$WORKSPACE/scripts/"*.sh
+```
+
+### Step 4: Initialize Git
 
 ```bash
 cd "$WORKSPACE"
@@ -67,7 +83,7 @@ git add -A
 git commit -m "init: Mjolnir Brain memory system"
 ```
 
-### Step 4: Set Up Cron Jobs (Optional)
+### Step 5: Set Up Cron Jobs (Optional — OPT-IN)
 
 > **⚠️ 所有 cron 任务均为可选 (OPT-IN)，请在审查脚本后手动启用。** 不启用 cron 不影响核心记忆功能的使用。
 
@@ -88,7 +104,7 @@ Add these lines:
 # 0 4 * * * ~/.openclaw/workspace/scripts/workspace_backup.sh >> ~/.openclaw/workspace/memory/backup.log 2>&1
 ```
 
-### Step 5: Configure Backup (Optional)
+### Step 6: Configure Backup (Optional — OPT-IN)
 
 Edit `scripts/workspace_backup.sh` and set your backup targets:
 
@@ -103,7 +119,7 @@ SSH_HOST="your-server"
 SSH_PATH="/backups/workspace/"
 ```
 
-### Step 6: Start Using
+### Step 7: Start Using
 
 1. Start an OpenClaw session
 2. The agent reads `BOOTSTRAP.md` and guides you through identity setup
