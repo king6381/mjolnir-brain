@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "description": "Strategy registry — problem→solution mapping with success rate tracking",
+    "version": "1.0",
+    "updated": "2026-03-19",
+    "usage": "On known error: lookup by keyword → try solutions by successRate desc → update rate after each attempt"
+  },
+
+  "pip_install_fail": {
+    "description": "pip package installation failed",
+    "match": ["pip install", "ModuleNotFoundError", "Could not find a version"],
+    "solutions": [
+      {"action": "Use Chinese mirror: pip install -i https://mirrors.aliyun.com/pypi/simple/", "successRate": 0.90, "tries": 10, "env": "China mainland"},
+      {"action": "Upgrade setuptools: pip install --upgrade setuptools wheel", "successRate": 0.60, "tries": 5},
+      {"action": "Try different Python version (3.11 has best compatibility)", "successRate": 0.40, "tries": 3}
+    ]
+  },
+
+  "npm_install_fail": {
+    "description": "npm installation failed",
+    "match": ["npm install", "npm ERR!", "EACCES"],
+    "solutions": [
+      {"action": "sudo npm install -g", "successRate": 0.80, "tries": 10},
+      {"action": "Use npx to run directly (skip global install)", "successRate": 0.70, "tries": 5},
+      {"action": "Fix npm prefix: npm config set prefix ~/.npm-global", "successRate": 0.60, "tries": 3}
+    ]
+  },
+
+  "service_crash": {
+    "description": "Service crashed or won't start",
+    "match": ["EADDRINUSE", "address already in use", "crash", "restart failed"],
+    "solutions": [
+      {"action": "Check zombie processes: ps aux | grep <name> + lsof -i :<port>", "successRate": 0.75, "tries": 10},
+      {"action": "Kill old PID and restart", "successRate": 0.70, "tries": 8},
+      {"action": "Clean lock files and restart", "successRate": 0.55, "tries": 5},
+      {"action": "Full reconfigure (preserve data, rebuild config)", "successRate": 0.90, "tries": 3, "note": "last resort"}
+    ]
+  },
+
+  "ssh_connect_fail": {
+    "description": "SSH connection failed",
+    "match": ["Connection refused", "Connection timed out", "Permission denied"],
+    "solutions": [
+      {"action": "Ping target: ping <ip>", "successRate": 0.90, "tries": 5},
+      {"action": "Verbose SSH: ssh -v <host>", "successRate": 0.70, "tries": 5},
+      {"action": "Re-copy SSH key: ssh-copy-id <host>", "successRate": 0.50, "tries": 3}
+    ]
+  }
+}
