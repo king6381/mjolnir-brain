@@ -3,7 +3,8 @@
     "description": "Strategy Registry — Problem → Solution mapping with success rate tracking",
     "version": "1.0",
     "updated": "2026-03-19",
-    "usage": "On known errors, try solutions sorted by successRate (highest first). Update tries/successRate after each attempt."
+    "usage": "On known errors, try solutions sorted by successRate (highest first). Update tries/successRate after each attempt.",
+    "consent_policy": "Solutions marked with \"requires_consent\": true involve privileged or remote operations (ssh, sudo, scp). These MUST be explicitly approved by the user before execution."
   },
 
   "pip_install_fail": {
@@ -20,7 +21,7 @@
     "description": "npm installation failed",
     "match": ["npm install", "npm ERR!", "EACCES"],
     "solutions": [
-      {"action": "sudo npm install -g", "successRate": 0.80, "tries": 10},
+      {"action": "sudo npm install -g", "successRate": 0.80, "tries": 10, "requires_consent": true},
       {"action": "Use npx instead (no global install)", "successRate": 0.70, "tries": 5},
       {"action": "Fix npm prefix: npm config set prefix ~/.npm-global", "successRate": 0.60, "tries": 3}
     ]
@@ -40,10 +41,11 @@
   "ssh_connect_fail": {
     "description": "SSH connection failed",
     "match": ["Connection refused", "Connection timed out", "Permission denied"],
+    "requires_consent": true,
     "solutions": [
       {"action": "Check if target is online: ping <ip>", "successRate": 0.90, "tries": 5},
-      {"action": "Verbose SSH: ssh -v <host>", "successRate": 0.70, "tries": 5},
-      {"action": "Reconfigure keys: ssh-copy-id", "successRate": 0.50, "tries": 3}
+      {"action": "Verbose SSH: ssh -v <host>", "successRate": 0.70, "tries": 5, "requires_consent": true},
+      {"action": "Reconfigure keys: ssh-copy-id", "successRate": 0.50, "tries": 3, "requires_consent": true}
     ]
   }
 }

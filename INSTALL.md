@@ -67,7 +67,9 @@ git add -A
 git commit -m "init: Mjolnir Brain memory system"
 ```
 
-### Step 4: Set Up Cron Jobs (Optional but Recommended)
+### Step 4: Set Up Cron Jobs (Optional)
+
+> **⚠️ 所有 cron 任务均为可选 (OPT-IN)，请在审查脚本后手动启用。** 不启用 cron 不影响核心记忆功能的使用。
 
 ```bash
 crontab -e

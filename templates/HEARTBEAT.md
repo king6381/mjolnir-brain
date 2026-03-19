@@ -1,5 +1,7 @@
 # HEARTBEAT.md - Periodic Checks
 
+> **⚠️ OPT-IN**: The checks in this file only execute automatically if the user has actively enabled cron jobs or heartbeat polling. Nothing here runs by default.
+
 ## 🔄 Periodic Checks (executed on each heartbeat poll)
 
 ### 1. System Health (Priority: Medium)

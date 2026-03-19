@@ -14,7 +14,7 @@
 - 🎯 **策略注册表** — 问题→解法映射，带成功率追踪，越用越准
 - 💓 **心跳系统** — 定期自检、知识提炼、空闲任务队列
 - 🤖 **AI 真摘要** — 自动提炼日志精华，不是原文复制
-- 📦 **双目标备份** — 支持 WebDAV + SSH 双通道容灾
+- 📦 **双目标备份 (可选, 需手动配置)** — 支持 WebDAV + SSH 双通道容灾
 - 🔍 **模糊搜索** — 多源记忆检索，支持归档搜索
 
 ## 📁 项目结构
@@ -47,7 +47,8 @@ mjolnir-brain/
 ├── docs/                        # 📚 详细文档
 │   ├── architecture.md          # 架构设计
 │   ├── self-learning.md         # 自学习机制详解
-│   └── best-practices.md        # 最佳实践
+│   ├── best-practices.md        # 最佳实践
+│   └── security.md              # 🔒 安全说明
 └── skill/                       # 🦞 OpenClaw Skill 打包
     └── SKILL.md
 ```
@@ -75,6 +76,7 @@ cp mjolnir-brain/strategies.json ~/.openclaw/workspace/
 chmod +x ~/.openclaw/workspace/scripts/*.sh
 
 # 配置 cron (可选)
+# ⚠️ 以下 cron 任务均为可选，请审查脚本内容后再启用
 crontab -e
 # 添加:
 # 0 * * * * ~/.openclaw/workspace/scripts/auto_commit.sh
@@ -133,7 +135,7 @@ crontab -e
 | 长期记忆容量 | ≤20KB (结构化精华) |
 | 错误复犯率 | 0% (已记录的错误) |
 | 策略自动解决率 | ~70% (已知问题) |
-| 外部依赖 | 零 (纯 markdown + json + bash) |
+| 外部依赖 | 零 (核心功能纯本地; 备份功能可选配置远程目标) |
 
 ## 🤝 雷神三件套
 

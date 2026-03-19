@@ -3,6 +3,21 @@
 # Supports: WebDAV (Nextcloud etc.) + SSH (any server)
 # Cron: 0 4 * * * (daily at 04:00)
 # Configure targets via environment variables (see below)
+#
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║                      ⚠️  SECURITY WARNING                       ║
+# ╠══════════════════════════════════════════════════════════════════╣
+# ║ This script packs the ENTIRE workspace into a tar.gz archive,  ║
+# ║ including MEMORY.md, daily logs, and any sensitive data.        ║
+# ║                                                                ║
+# ║ Before enabling:                                               ║
+# ║  1. Review backup targets — ensure they are TRUSTED locations  ║
+# ║  2. No remote backup is enabled by default; you must manually  ║
+# ║     set environment variables (BACKUP_WEBDAV_*, BACKUP_SSH_*)  ║
+# ║  3. Run with DRY_RUN=1 first to see what would happen:        ║
+# ║       DRY_RUN=1 ./workspace_backup.sh                         ║
+# ║  4. Or run manually once before adding to cron                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
 
 set -e
 
@@ -24,6 +39,27 @@ KEEP_COUNT=7  # Number of backup copies to keep
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
 }
+
+# --- DRY_RUN mode: print actions without executing ---
+DRY_RUN="${DRY_RUN:-0}"
+
+if [ "$DRY_RUN" = "1" ]; then
+    log "=== DRY RUN MODE — no changes will be made ==="
+    log "Workspace: $WORKSPACE"
+    log "Would create archive in: $BACKUP_DIR"
+    if [ -n "$BACKUP_WEBDAV_URL" ]; then
+        log "Would upload to WebDAV: $BACKUP_WEBDAV_URL"
+    else
+        log "WebDAV target: not configured (skipped)"
+    fi
+    if [ -n "$BACKUP_SSH_HOST" ]; then
+        log "Would upload via SSH to: $BACKUP_SSH_HOST:$BACKUP_SSH_PATH"
+    else
+        log "SSH target: not configured (skipped)"
+    fi
+    log "=== DRY RUN complete ==="
+    exit 0
+fi
 
 log "=== Backup started ==="
 
