@@ -2,7 +2,7 @@
 
 **AI Agent 自进化记忆系统** — 让你的 AI 助手拥有持久记忆、自我学习和自动纠错能力。
 
-> 雷神三件套: [雷神之锤](https://github.com) (量化分析) · [雷神之盾](https://github.com) (加密安全) · **雷神之脑** (记忆智能)
+> 雷神三件套: ⚒️ 雷神之锤 (Private) · 🛡️ [雷神之盾](https://github.com) · 🧠 **雷神之脑**
 
 ---
 
@@ -139,9 +139,9 @@ crontab -e
 
 | 项目 | 定位 | 状态 |
 |------|------|------|
-| ⚒️ 雷神之锤 Mjolnir | 量化分析系统 | Private |
-| 🛡️ 雷神之盾 Mjolnir Shield | 加密安全系统 | Public |
-| 🧠 **雷神之脑 Mjolnir Brain** | **AI 记忆智能** | **Public** |
+| ⚒️ 雷神之锤 Mjolnir Hammer | 量化分析系统 | Private |
+| 🛡️ 雷神之盾 Mjolnir Shield | 加密安全系统 | [GitHub](https://github.com) |
+| 🧠 **雷神之脑 Mjolnir Brain** | **AI 记忆智能** | **本项目** |
 
 ## 📄 License
 

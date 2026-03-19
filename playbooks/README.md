@@ -1,38 +1,40 @@
 # Playbooks
 
-Playbooks are parameterized runbooks for frequently repeated operations.
+Playbooks are parameterized runbooks for common operations. When you find yourself doing the same thing 3+ times, create a playbook.
 
 ## Format
 
-Each playbook follows this structure:
-
 ```markdown
-# Title
+# Operation Name
+
 ## Parameters
-- param1: description
-## Pre-checks
-- [ ] check item
+- param1: description (required/optional)
+
+## Prerequisites
+- [ ] Check item
+
 ## Steps
-1. command
+1. Exact command or action
 2. ...
+
 ## Rollback
-- what to do if it fails
+- What to do if it fails
+
 ## History
-- created: date
+- Created: YYYY-MM-DD
+- Last used: YYYY-MM-DD
 ```
 
 ## Frequency Tracking
 
-`frequency.json` tracks how often operations are performed. When an operation type exceeds 3 occurrences, consider creating a playbook for it.
+The `frequency.json` file tracks how often operations are performed. When an operation appears 3+ times without a playbook, the system suggests creating one.
 
-## Adding a Playbook
-
-1. Create `your-playbook.md` in this directory
-2. Follow the format above
-3. Update `frequency.json` if tracking the operation type
-
-## Example Playbooks
-
-- `deploy-to-server.md` — Deploy project to production
-- `debug-service-crash.md` — Service crash troubleshooting flowchart
-- `backup-data.md` — Data backup procedure
+```json
+{
+  "_meta": {"description": "Operation frequency tracker"},
+  "operations": {
+    "deploy-to-server": {"count": 5, "lastUsed": "2026-03-19", "hasPlaybook": true},
+    "debug-network": {"count": 2, "lastUsed": "2026-03-18", "hasPlaybook": false}
+  }
+}
+```
