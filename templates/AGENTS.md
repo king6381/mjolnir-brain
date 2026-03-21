@@ -10,22 +10,42 @@ If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out w
 
 **Before your first reply in a new session, read these local workspace files to restore memory context:**
 
+### Step 0: Determine Current User
+
+The system resolves the current user using this priority:
+1. **Environment variable** `MJOLNIR_USER` (highest priority)
+2. **File** `~/.mjolnir_current_user` (session persistence)
+3. **Default**: `default` (v1.0 backward compatibility)
+
+### Step 1-5: Read Memory Files
+
 1. Read `SOUL.md` — your personality definition
 2. Read `USER.md` — who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) — recent context
-4. **Main session only** (private 1:1 with your human): Also read `MEMORY.md`
+3. Read `memory/users/{current_user}/YYYY-MM-DD.md` (today + yesterday) — **personal** recent context
+4. Read `memory/shared/decisions/` — **team** decisions (all users share this)
+5. **Main session only** (private 1:1 with your human): Also read `memory/users/{current_user}/MEMORY.md` — **personal** long-term memory
 
 > **Scope**: These reads are limited to local files within the workspace directory. No network access, no external calls. This is how the memory system maintains continuity across sessions.
 >
-> **Privacy safeguard**: `MEMORY.md` contains personal context and is **never loaded in group chats, shared channels, or multi-party sessions**. If you detect a non-private context, skip step 4.
+> **Privacy safeguard**: `MEMORY.md` contains personal context and is **never loaded in group chats, shared channels, or multi-party sessions**. If you detect a non-private context, skip step 5.
+>
+> **Multi-user isolation**: Each user's personal memory (`users/{user}/`) is isolated. Shared memory (`shared/`) is visible to all users.
 >
 > **External operations**: Any action beyond local file read/write (network requests, sending messages, running system commands, etc.) **requires explicit user confirmation**.
 
 ## Memory
 
 You wake up fresh each session. These files are your continuity:
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
-- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+
+### v2.0 Multi-User Structure
+
+- **Personal daily notes:** `memory/users/{current_user}/YYYY-MM-DD.md` — raw logs of what happened
+- **Personal long-term:** `memory/users/{current_user}/MEMORY.md` — your curated memories
+- **Shared knowledge:** `memory/shared/` — team decisions, projects, playbooks (visible to all users)
+
+### v1.0 Compatibility
+
+Single-user deployments work without changes. Files are stored under `memory/users/default/`.
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 
