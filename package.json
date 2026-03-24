@@ -1,15 +1,26 @@
 {
   "name": "mjolnir-brain",
-  "version": "1.0.5",
-  "description": "AI Agent Self-Evolving Memory System — persistent memory, self-learning, and auto-correction. Core functions are local-only (pure Markdown + JSON). Optional scripts require: bash 4+, git, grep. Optional backup requires: curl, ssh/scp.",
-  "keywords": ["ai-agent", "memory", "self-learning", "openclaw", "strategy-registry", "write-through", "local-first"],
+  "version": "2.0.0",
+  "description": "AI Agent Self-Evolving Memory System — partitioned memory, brain swarm scheduling, node-to-node protocol. Core functions are local-only (pure Markdown + JSON).",
+  "keywords": [
+    "ai-agent",
+    "memory",
+    "self-learning",
+    "openclaw",
+    "strategy-registry",
+    "write-through",
+    "local-first"
+  ],
   "author": "king6381",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/king6381/mjolnir-brain"
   },
-  "os": ["linux", "darwin"],
+  "os": [
+    "linux",
+    "darwin"
+  ],
   "optionalDependencies_note": "Core memory system needs NO binaries. Scripts optionally use: bash 4+, git, grep, tar/gzip, curl (WebDAV backup), ssh/scp (SSH backup)",
   "env": {
     "MJOLNIR_BRAIN_WORKSPACE": "可选：覆盖工作空间路径（默认：$HOME/.openclaw/workspace）",
