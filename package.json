@@ -1,8 +1,8 @@
 {
   "name": "mjolnir-brain",
-  "version": "1.0.5",
-  "description": "AI Agent Self-Evolving Memory System — persistent memory, self-learning, and auto-correction. Core functions are local-only (pure Markdown + JSON). Optional scripts require: bash 4+, git, grep. Optional backup requires: curl, ssh/scp.",
-  "keywords": ["ai-agent", "memory", "self-learning", "openclaw", "strategy-registry", "write-through", "local-first"],
+  "version": "2.0.0",
+  "description": "AI Agent Self-Evolving Memory System v2.0 — persistent memory, self-learning, auto-correction, git cross-verification, self-evolution protocol. Core functions are local-only (pure Markdown + JSON). Optional scripts require: bash 4+, git, grep. Optional backup requires: curl, ssh/scp.",
+  "keywords": ["ai-agent", "memory", "self-learning", "openclaw", "strategy-registry", "write-through", "local-first", "self-evolution"],
   "author": "king6381",
   "license": "MIT",
   "repository": {

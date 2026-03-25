@@ -1,10 +1,19 @@
-# 🧠 雷神之脑 Mjolnir Brain
+# 🧠 雷神之脑 Mjolnir Brain v2.0
 
 **AI Agent 自进化记忆系统** — 让你的 AI 助手拥有持久记忆、自我学习和自动纠错能力。
 
 > 雷神三件套: ⚒️ 雷神之锤 (Private) · 🛡️ [雷神之盾](https://github.com) · 🧠 **雷神之脑**
 
 ---
+
+## 🆕 v2.0 新增特性
+
+- ⚠️ **强制记忆检查** — 新会话必读记忆文件，不允许跳过
+- 🔍 **Git 交叉验证** — `git log` 捕获 daily log 可能遗漏的工作
+- 🔄 **自我进化协议** — Agent 主动改进自己的文档和规则
+- 📝 **增强 Write-Through** — 失败时自动查询策略注册表+更新成功率
+- 🧹 **记忆卫生** — 20KB 上限强制执行，心跳驱动的知识提炼
+- 🛡️ **隐私保护** — MEMORY.md 在群聊/共享场景自动跳过
 
 ## 🔒 安全模型
 
@@ -20,7 +29,7 @@
 
 详见 [docs/security.md](docs/security.md)。
 
-## ✨ 特性
+## ✨ 核心特性
 
 - 🧠 **分层记忆架构** — 会话日志 → 长期记忆 → 规则文件，三层沉淀
 - 🔄 **自我进化协议** — 犯过的错自动记录，不犯第二次
@@ -28,7 +37,7 @@
 - 🎯 **策略注册表** — 问题→解法映射，带成功率追踪，越用越准
 - 💓 **心跳系统 (opt-in)** — 定期自检、知识提炼、空闲任务队列
 - 🤖 **AI 真摘要 (opt-in)** — 自动提炼日志精华，不是原文复制
-- 📦 **双目标备份 (opt-in, 需手动配置)** — 支持 WebDAV + SSH 双通道容灾
+- 📦 **双目标备份 (opt-in)** — 支持 WebDAV + SSH 双通道容灾
 - 🔍 **模糊搜索** — 多源记忆检索，支持归档搜索
 
 ## 📁 项目结构
@@ -37,14 +46,16 @@
 mjolnir-brain/
 ├── README.md                    # 本文件
 ├── INSTALL.md                   # 安装指南
+├── SKILL.md                     # OpenClaw Skill 元数据
 ├── templates/                   # 📋 开箱即用的模板文件
-│   ├── AGENTS.md                # 行为规则 + 自进化协议
-│   ├── SOUL.md                  # 人格定义框架
+│   ├── AGENTS.md                # 行为规则 + 自进化协议 (v2.0 强化)
+│   ├── SOUL.md                  # 人格定义 + 自我进化
 │   ├── BOOTSTRAP.md             # 首次启动引导
 │   ├── IDENTITY.md              # 身份模板
 │   ├── USER.md                  # 用户档案模板
 │   ├── MEMORY.md                # 长期记忆模板 (分章节结构)
-│   ├── HEARTBEAT.md             # 心跳检查 + 空闲任务队列
+│   ├── HEARTBEAT.md             # 心跳检查 + 记忆维护
+│   ├── TOOLS.md                 # 工具配置模板
 │   └── memory/                  # 记忆目录模板
 │       └── .gitkeep
 ├── scripts/                     # 🔧 自动化脚本
@@ -54,17 +65,16 @@ mjolnir-brain/
 │   ├── strategy_update.sh       # 策略成功率更新
 │   ├── auto_commit.sh           # Git 自动提交
 │   ├── workspace_backup.sh      # 双目标备份
-│   └── daily_log_init.sh        # 日志模板初始化
+│   ├── daily_log_init.sh        # 日志模板初始化
+│   └── log_work.sh              # 工作即时记录
 ├── strategies.json              # 🎯 策略注册表 (示例)
 ├── playbooks/                   # 📖 操作手册模板
 │   └── README.md
-├── docs/                        # 📚 详细文档
-│   ├── architecture.md          # 架构设计
-│   ├── self-learning.md         # 自学习机制详解
-│   ├── best-practices.md        # 最佳实践
-│   └── security.md              # 🔒 安全说明
-└── skill/                       # 🦞 OpenClaw Skill 打包
-    └── SKILL.md
+└── docs/                        # 📚 详细文档
+    ├── architecture.md          # 架构设计
+    ├── self-learning.md         # 自学习机制详解
+    ├── best-practices.md        # 最佳实践
+    └── security.md              # 🔒 安全说明
 ```
 
 ## 🚀 快速开始
@@ -81,7 +91,7 @@ clawdhub install mjolnir-brain
 # 克隆仓库
 git clone https://github.com/king6381/mjolnir-brain.git
 
-# 1. 复制核心模板到你的 workspace（这是记忆系统的全部必需品）
+# 1. 复制核心模板到你的 workspace
 cp -r mjolnir-brain/templates/* ~/.openclaw/workspace/
 cp mjolnir-brain/strategies.json ~/.openclaw/workspace/
 mkdir -p ~/.openclaw/workspace/memory
@@ -90,11 +100,10 @@ mkdir -p ~/.openclaw/workspace/memory
 cp -r mjolnir-brain/scripts ~/.openclaw/workspace/
 chmod +x ~/.openclaw/workspace/scripts/*.sh
 
-# 3. (可选) 配置 cron — ⚠️ 全部为 opt-in，不配置不影响核心功能
+# 3. (可选) 配置 cron
 # crontab -e
 # 0 * * * * ~/.openclaw/workspace/scripts/auto_commit.sh
 # 0 4 * * * ~/.openclaw/workspace/scripts/memory_consolidate.sh
-# 0 4 * * * ~/.openclaw/workspace/scripts/workspace_backup.sh  # 需先配置备份目标
 ```
 
 ### 首次使用
@@ -125,7 +134,7 @@ chmod +x ~/.openclaw/workspace/scripts/*.sh
 │  └──────────┘  └──────────┘  └───────────┘│
 │                                             │
 │  ┌──────────────────────────────────────┐  │
-│  │  Cron: 提炼 + 备份 + Git + 清理      │  │
+│  │  Cron: 提炼 + 备份 + Git (opt-in)    │  │
 │  └──────────────────────────────────────┘  │
 └─────────────────────────────────────────────┘
 ```
@@ -140,6 +149,16 @@ chmod +x ~/.openclaw/workspace/scripts/*.sh
          → 30天归档 → memory/archive/
 ```
 
+### v2.0 会话启动流程
+
+```
+新会话 → 读 SOUL.md + USER.md (身份)
+       → 读 memory/今天+昨天.md (近期)
+       → git log --since="today" (交叉验证)
+       → 读 MEMORY.md (长期，仅主会话)
+       → 开始工作
+```
+
 ## 📊 效果数据 (来自真实使用)
 
 | 指标 | 数值 |
@@ -148,15 +167,15 @@ chmod +x ~/.openclaw/workspace/scripts/*.sh
 | 长期记忆容量 | ≤20KB (结构化精华) |
 | 错误复犯率 | 0% (已记录的错误) |
 | 策略自动解决率 | ~70% (已知问题) |
-| 外部依赖 | 零 (核心功能纯本地; 备份功能可选配置远程目标) |
+| 外部依赖 | 零 (核心功能纯本地) |
 
 ## 🤝 雷神三件套
 
 | 项目 | 定位 | 状态 |
 |------|------|------|
-| ⚒️ 雷神之锤 Mjolnir Hammer | 量化分析系统 | Private |
-| 🛡️ 雷神之盾 Mjolnir Shield | 加密安全系统 | [GitHub](https://github.com) |
-| 🧠 **雷神之脑 Mjolnir Brain** | **AI 记忆智能** | **本项目** |
+| ⚒️ 雷神之锤 | 量化分析系统 | Private |
+| 🛡️ 雷神之盾 | 加密安全系统 | GitHub |
+| 🧠 **雷神之脑** | **AI 记忆智能** | **v2.0** |
 
 ## 📄 License
 
@@ -171,13 +190,12 @@ MIT License
 ## 📚 关于作者
 
 **公众号：** 雷哥玩 AI  
-**人设：** 45 岁失业老板，重新出发学 AI  
-**定位：** 技术派（OpenClaw/AI/开发实战），用故事串联技术  
-**风格：** 诙谐 + 戏谑 + 幽默 + 共情，不卖惨不装逼
+**人设：** 45 岁技术老兵，重新出发学 AI  
+**定位：** 技术派（OpenClaw/AI/开发实战），用故事串联技术
 
 **在更系列：**
 - 📖 OpenClaw 入门教程（30 天教学）
-- 🛠️ 雷神之 30 天项目实战
+- 🛠️ 雷神之锤 30 天项目实战
 - 💡 AI 工具实战技巧
 
 **关注方式：** 微信搜索"雷哥玩 AI"或扫描公众号二维码

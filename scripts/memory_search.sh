@@ -1,7 +1,10 @@
 #!/bin/bash
-# memory_search.sh - Memory search tool (v2: fuzzy match + multi-source)
+# memory_search.sh - Memory search tool (v2: fuzzy match + multi-source + strategies)
 # Usage: ./memory_search.sh <keyword> [options]
-# Options: -f fuzzy search  -a search archive  -c N context lines (default 2)
+# Options:
+#   -f    Fuzzy search (allows gaps between characters)
+#   -a    Also search archive files (memory/archive/)
+#   -c N  Context lines to show (default 2)
 
 WORKSPACE="${MJOLNIR_BRAIN_WORKSPACE:-$HOME/.openclaw/workspace}"
 MEMORY_MD="$WORKSPACE/MEMORY.md"
@@ -24,7 +27,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ -z "$KEYWORD" ]; then
-    echo "🔍 memory_search v2 — Memory search tool"
+    echo "🔍 memory_search v2.0 — Memory search tool"
     echo ""
     echo "Usage: $0 <keyword> [options]"
     echo ""
@@ -96,11 +99,22 @@ if [ "$SEARCH_ARCHIVE" -eq 1 ] && [ -d "$ARCHIVE_DIR" ]; then
     done
 fi
 
+# Search strategies.json
+if [ -f "$WORKSPACE/strategies.json" ]; then
+    HITS=$(count_matches "$WORKSPACE/strategies.json")
+    if [ "$HITS" -gt 0 ]; then
+        echo -e "\n🎯 Strategy Registry ($HITS matches):"
+        grep $GREP_OPTS -n "$PATTERN" "$WORKSPACE/strategies.json" 2>/dev/null | head -5 | sed 's/^/  /'
+        TOTAL_HITS=$((TOTAL_HITS + HITS))
+    fi
+fi
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ "$TOTAL_HITS" -gt 0 ]; then
     echo "📊 Found $TOTAL_HITS matches"
 else
     echo "❌ No matches found"
-    [ "$FUZZY" -eq 0 ] && echo "💡 Try fuzzy search: $0 -f $KEYWORD"
+    [ "$FUZZY" -eq 0 ] && echo "💡 Try fuzzy search: $0 -f \"$KEYWORD\""
+    [ "$SEARCH_ARCHIVE" -eq 0 ] && echo "💡 Try archive: $0 -a \"$KEYWORD\""
 fi
