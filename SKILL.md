@@ -1,9 +1,9 @@
 ---
 name: mjolnir-brain
-description: "AI Agent 自进化记忆系统 (Mjolnir Brain)。提供分层记忆架构、Write-Through 即时写入、策略注册表(问题→解法+成功率追踪)、心跳自检、AI 真摘要提炼。核心功能纯本地运行，无网络依赖。备份和 cron 均为可选 opt-in。适用于需要持久记忆、自我学习和自动纠错能力的 AI Agent。"
+description: "AI Agent 自进化记忆系统 v2.0。分层记忆架构、Write-Through 即时写入、策略注册表 (问题→解法+成功率追踪)、心跳自检、AI 真摘要提炼、git log 交叉验证。核心功能纯本地运行，无网络依赖。备份和 cron 均为可选 opt-in。适用于需要持久记忆、自我学习和自动纠错能力的 AI Agent。"
 ---
 
-# Mjolnir Brain — AI Agent Self-Evolving Memory System
+# Mjolnir Brain v2.0 — AI Agent Self-Evolving Memory System
 
 > **Security model**: Core memory functions are local-only (read/write files in your workspace). No network access, no credentials, no external calls required. Optional backup scripts and cron jobs are strictly opt-in — see [docs/security.md](docs/security.md).
 
@@ -13,7 +13,7 @@ The core memory system (templates + strategies.json) requires **no binaries** �
 
 **Optional scripts** (in `scripts/`) require:
 - `bash` 4+ — script execution
-- `git` — auto_commit.sh
+- `git` — auto_commit.sh, git log verification
 - `grep` — memory_search.sh
 - `tar`, `gzip` — memory_consolidate.sh (archiving)
 - `curl` — workspace_backup.sh (only if WebDAV backup enabled)
@@ -38,7 +38,7 @@ chmod +x $WORKSPACE/scripts/*.sh
 ## Core Components
 
 ### 1. Three-Layer Memory
-- **Layer 1**: `memory/YYYY-MM-DD.md` — daily session logs (ephemeral)
+- **Layer 1**: `memory/YYYY-MM-DD.md` — daily session logs (ephemeral, 30-day retention)
 - **Layer 2**: `MEMORY.md` (≤20KB) + `strategies.json` + `playbooks/` — curated knowledge
 - **Layer 3**: `SOUL.md` + `AGENTS.md` + `TOOLS.md` — identity & rules (stable)
 
@@ -57,7 +57,26 @@ scripts/strategy_lookup.sh "pip install"
 scripts/strategy_update.sh pip_install_fail 0 success
 ```
 
-### 4. Automated Maintenance (OPT-IN cron)
+### 4. Session Startup with Git Verification (v2.0 New)
+At session start, the agent cross-checks memory files against git log:
+1. Read `SOUL.md`, `USER.md` — identity and context
+2. Read `memory/YYYY-MM-DD.md` (today + yesterday) — recent activity
+3. Run `git log --oneline --since="today 00:00"` — verify actual work
+4. **Main session only**: Read `MEMORY.md` — long-term curated memory
+
+> **Why git verification**: Daily logs may miss work done by sub-tasks, cron jobs, or other sessions. Git log catches everything that was committed.
+
+### 5. Self-Evolution Protocol (v2.0 Enhanced)
+Beyond recording errors, the agent actively improves its own docs:
+
+| Trigger | Action | Target File |
+|---------|--------|-------------|
+| Command failed | Log error + fix | MEMORY.md + strategies.json |
+| User corrected you | Update behavior | SOUL.md / AGENTS.md |
+| Found better approach | Update workflow | AGENTS.md / TOOLS.md |
+| Same error twice | Extract permanent rule | AGENTS.md |
+
+### 6. Automated Maintenance (OPT-IN cron)
 
 > ⚠️ **All cron jobs are optional.** The core memory system works without them. Review each script before enabling.
 
@@ -67,7 +86,7 @@ scripts/strategy_update.sh pip_install_fail 0 success
 # 0 4 * * *  scripts/workspace_backup.sh       # remote backup (requires: curl/ssh, credentials)
 ```
 
-### 5. Search (requires: grep)
+### 7. Search (requires: grep)
 ```bash
 scripts/memory_search.sh "keyword"           # exact search
 scripts/memory_search.sh -f "fuzzy term"     # fuzzy search
@@ -80,23 +99,33 @@ At the start of each session, the agent reads local workspace files to restore m
 1. Read `SOUL.md` — personality definition
 2. Read `USER.md` — user profile
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) — recent context
-4. **Main session only**: Read `MEMORY.md` — long-term curated memory
+4. Run `git log --oneline --since="today 00:00"` — cross-check actual work
+5. **Main session only**: Read `MEMORY.md` — long-term curated memory
 
-> **Privacy safeguard**: `MEMORY.md` is loaded **only in private main sessions** (1:1 with the user). It is **never loaded** in group chats, shared channels, or multi-party contexts to prevent data leakage. All files are local to the workspace — no data is sent externally.
+> **Privacy safeguard**: `MEMORY.md` is loaded **only in private main sessions** (1:1 with the user). It is **never loaded** in group chats, shared channels, or multi-party contexts to prevent data leakage.
 
 ## File Reference
 | File | Purpose | Load Context |
 |------|---------|-------------|
-| `SOUL.md` | Personality | Every session (local read) |
+| `SOUL.md` | Personality + Self-Evolution | Every session (local read) |
 | `AGENTS.md` | Behavior rules + Write-Through | Every session (local read) |
 | `USER.md` | User profile | Every session (local read) |
-| `MEMORY.md` | Long-term curated memory (≤20KB) | **Main session only** (never in group/shared) |
+| `MEMORY.md` | Long-term curated memory (≤20KB) | **Main session only** |
 | `IDENTITY.md` | Name, vibe, emoji | On reference |
 | `TOOLS.md` | Environment config | On reference |
 | `HEARTBEAT.md` | Periodic checks + idle queue | On heartbeat (opt-in) |
 | `BOOTSTRAP.md` | First-run setup (delete after) | First session only |
 | `strategies.json` | Problem→solution registry | On error |
 | `playbooks/` | Parameterized runbooks | On repeated operation |
+
+## What's New in v2.0
+
+- ⚠️ **Mandatory session check** — No skipping memory reads, even under time pressure
+- 🔍 **Git log cross-verification** — Catches work missed by daily logs
+- 🔄 **Self-Evolution protocol** — Agent actively improves its own documentation
+- 📝 **Enhanced Write-Through** — Failure handling with strategy registry integration
+- 🧹 **Memory hygiene** — 20KB cap enforcement, heartbeat-driven consolidation
+- 🛡️ **Privacy safeguards** — MEMORY.md auto-skip in group/shared contexts
 
 ## Docs
 - `docs/architecture.md` — System design and data flow
