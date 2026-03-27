@@ -1,6 +1,6 @@
 {
   "name": "mjolnir-brain",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "AI Agent Self-Evolving Memory System — 100% local core, optional network features (opt-in)",
   "keywords": [
     "ai-agent",
